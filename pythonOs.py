@@ -3,7 +3,6 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 from datetime import datetime
 
-
 def show_main_ui():
     # Clear existing widgets
     for widget in root.winfo_children():
@@ -16,6 +15,7 @@ def show_main_ui():
     def load_bg_image(index):
         try:
             img = Image.open(bg_image_paths[index])
+            img = img.resize((root.winfo_width(), root.winfo_height()), Image.LANCZOS)
             return ImageTk.PhotoImage(img)
         except Exception as e:
             print(f"Failed to load image {bg_image_paths[index]}: {e}")
@@ -78,16 +78,34 @@ def show_main_ui():
         root.destroy()
 
     def show_about():
-        tk.messagebox.showinfo("About PyOS", "PyOS version 1.0\nCreated by: xbr")
+        tk.messagebox.showinfo("About PyOS", "PyOS version 1.1\nCreated by: xbr")
+
+    def toggle_dark_mode():
+        nonlocal is_dark_mode
+        is_dark_mode = not is_dark_mode
+        new_color = "#003b4c" if is_dark_mode else "white"
+
+        bottom_frame.config(bg=new_color)
+        time_label.config(bg=new_color, fg="white" if is_dark_mode else "black")
+
+        for frame in [start_frame, settings_frame, draw_frame, draw_content]:
+            frame.config(bg=new_color)
+
+        clear_btn.config(bg="lightgrey" if not is_dark_mode else "#006778")
+        draw_canvas.config(bg="white" if not is_dark_mode else "#b0e0e6")
 
     # ===== Background Setup =====
     bg_image_paths = [
-        "assets/pixelate.jpg",
-        "assets/pixelate2.jpg",
-        "assets/pixelate3.jpg"
+        "assets/pyOS_wallpaper1.jpg",
+        "assets/pyOS_wallpaper2.jpg",
+        "assets/pyOS_wallpaper3.jpg",
+        "assets/coplandos_wallpaper.jpg",
+        "assets/lain_wallpaper.jpg",
+        "assets/windows7.jpg"
     ]
     current_image_index = [0]
 
+    root.update_idletasks()
     bg_img_obj = load_bg_image(current_image_index[0])
     bg_label = tk.Label(root, image=bg_img_obj)
     bg_label.image = bg_img_obj
@@ -99,7 +117,7 @@ def show_main_ui():
     bottom_frame = tk.Frame(root, bg="white")
     bottom_frame.pack(side='bottom', fill='x')
 
-    time_label = tk.Label(bottom_frame, text=get_current_time(), bg="white", font=("Courier", 12))
+    time_label = tk.Label(bottom_frame, text=get_current_time(), bg="white", fg="black", font=("Courier", 12))
     time_label.pack(side='left', padx=10)
 
     update_clock()
@@ -113,7 +131,7 @@ def show_main_ui():
     draw_content = tk.Frame(draw_frame, bg="white")
     draw_content.pack(expand=True, fill="both", padx=10, pady=10)
 
-    clear_btn = tk.Button(draw_content, text="Clear", command=clear_canvas)
+    clear_btn = tk.Button(draw_content, text="Clear", command=clear_canvas, bg="lightgrey")
     clear_btn.pack(pady=(0, 5))
 
     draw_canvas = tk.Canvas(draw_content, bg="white")
@@ -129,10 +147,12 @@ def show_main_ui():
     is_start_visible = tk.BooleanVar(value=False)
     is_settings_visible = tk.BooleanVar(value=False)
     is_draw_visible = tk.BooleanVar(value=False)
+    is_dark_mode = False
 
     # ===== Frame Contents =====
     tk.Button(start_frame, text="Exit", command=quit_app).pack(padx=20, pady=10)
     tk.Button(settings_frame, text="Change background", command=cycle_background_image).pack(padx=20, pady=10)
+    tk.Button(settings_frame, text="Dark mode", command=toggle_dark_mode).pack(padx=20, pady=10)
 
     # ===== Control Buttons =====
     start_btn = tk.Button(bottom_frame, text="START")
@@ -152,24 +172,26 @@ def show_main_ui():
 # ===== Main App Entry Point =====
 root = tk.Tk()
 root.title("PyOS")
-root.geometry("800x500+50+50")
+root.state("zoomed")  # Fullscreen
 root.configure(background="black")
-root.minsize(800, 500)
-root.maxsize(1000, 700)
 
-# Boot screen
+# ===== Boot Screen with Background Image =====
+boot_img = Image.open("assets/lain_wallpaper.jpg")
+boot_img = boot_img.resize((root.winfo_screenwidth(), root.winfo_screenheight()), Image.LANCZOS)
+boot_bg = ImageTk.PhotoImage(boot_img)
+
+boot_label = tk.Label(root, image=boot_bg)
+boot_label.image = boot_bg
+boot_label.place(relwidth=1, relheight=1)
+
 tk.Label(
     root,
     text="Booting PyOS...",
     fg="lime",
     bg="black",
     font=("Courier", 18)
-).pack(expand=True)
+).place(relx=0.5, rely=0.5, anchor="center")
 
-<<<<<<< HEAD
-# Wait for 3 seconds before showing the main UI of PyOS
-=======
-# Wait for 3 seconds before showing the main UI
->>>>>>> 0875908f24a83c7654bf88fa58a9471ccc5299dc
+# Show main UI after 3 seconds
 root.after(3000, show_main_ui)
 root.mainloop()
