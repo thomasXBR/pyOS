@@ -166,6 +166,10 @@ tk.Label(
     font=("Courier", 18)
 ).pack(expand=True)
 
+<<<<<<< HEAD
 # Wait for 3 seconds before showing the main UI of PyOS
+=======
+# Wait for 3 seconds before showing the main UI
+>>>>>>> 0875908f24a83c7654bf88fa58a9471ccc5299dc
 root.after(3000, show_main_ui)
 root.mainloop()
