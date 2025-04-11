@@ -78,7 +78,7 @@ def show_main_ui():
         root.destroy()
 
     def show_about():
-        tk.messagebox.showinfo("About PyOS", "PyOS version 1.1\nCreated by: xbr")
+        tk.messagebox.showinfo("About PyOS", "PyOS version 1.1.1\nCreated by: xbr")
 
     def toggle_dark_mode():
         nonlocal is_dark_mode
@@ -185,7 +185,7 @@ boot_label.image = boot_bg
 boot_label.place(relwidth=1, relheight=1)
 
 tk.Label(
-    root,
+    root.attributes(fullscreen=True),
     text="Booting PyOS...",
     fg="lime",
     bg="black",
