@@ -96,7 +96,7 @@ def show_main_ui():
         root.destroy()
 
     def show_about():
-        tk.messagebox.showinfo("About PyOS", "PyOS version 1.1.2\nCreated by: xbr")
+        tk.messagebox.showinfo("About PyOS", "PyOS version 1.1.2\nCreated by: xbr") #VERSION 1.1.2
 
     def toggle_dark_mode():
         nonlocal is_dark_mode
